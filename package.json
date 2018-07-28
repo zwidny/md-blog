@@ -1,0 +1,35 @@
+{
+  "name": "mdblog-front-end",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "build": "node_modules/.bin/webpack-cli --config webpack/webpack.config.prod.js",
+    "dev:staging": "node_modules/.bin/webpack-dev-server --config webpack/webpack.config.js",
+    "dev": "node_modules/.bin/webpack-dev-server --config webpack/webpack.config.local.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mobx": "^5.0.3",
+    "mobx-react": "^5.2.3",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-transform-decorators-legacy": "^1.3.5",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-1": "^6.24.1",
+    "css-loader": "^1.0.0",
+    "file-loader": "^1.1.11",
+    "style-loader": "^0.21.0",
+    "uglify-js": "^3.4.5",
+    "uglifyjs-webpack-plugin": "^1.2.7",
+    "webpack": "^4.16.0",
+    "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.1.4"
+  }
+}
