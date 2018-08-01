@@ -4,7 +4,13 @@ import {observer} from 'mobx-react';
 import {marked} from "./utils/markdown.jsx";
 import './common/base.css'
 import {blogList} from "./store.jsx";
+import {Layout, Tabs} from 'antd';
+
+const {Header, Footer, Sider, Content} = Layout;
+const TabPane = Tabs.TabPane;
+
 const _ = require('lodash');
+
 
 @observer
 class APP extends React.Component {
@@ -24,8 +30,28 @@ class APP extends React.Component {
 
   render() {
     return (
+      <Layout>
+        <Header>Header</Header>
+        <Layout>
+          <Sider theme="light">Sider</Sider>
+          <Content>
+            <Tabs
+              defaultActiveKey="1"
+              tabPosition="right"
 
-        <div dangerouslySetInnerHTML={this.html}></div>
+            >
+
+              <TabPane tab="+" key="1">+</TabPane>
+              <TabPane tab="Tab 2" key="2">
+                <div dangerouslySetInnerHTML={this.html}></div>
+              </TabPane>
+
+            </Tabs>
+          </Content>
+        </Layout>
+        <Footer>Footer</Footer>
+      </Layout>
+
 
     )
   }
