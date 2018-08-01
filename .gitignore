@@ -116,3 +116,4 @@ fabric.properties
 /.idea
 
 /package-lock.json
+/webpack/webpack.config.local.js
