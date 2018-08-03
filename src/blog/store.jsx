@@ -1,69 +1,104 @@
 import {RequestStore, AjaxStore} from "../common/store.jsx";
 import {observable, computed, reaction} from "mobx";
 import {marked} from "../utils/markdown.jsx";
+import {message} from 'antd';
 
 const _ = require('lodash');
 
+// 状态与是否展示HTML的关系.
+const STATE2HTML = {
+  edit: false,
+  preview: true,
+  browse: true
+};
+
+
 class BlogStore extends RequestStore {
+  @observable id = '';  // blog id
   @observable content = '';
+  @observable originalContent = '';
   @observable changed = false;
-  @observable editMode = false;
+  @observable state = 'browse';
 
   constructor(url, settings = {}) {
     super(url, settings);
     reaction(() => this.response.jqXHR, data => {
       if (data.status === 200) {
         this.changed = false;
+        message.info("操作成功")
       }
     })
   }
 
   onEdit = (e) => {
-    this.editMode = true;
+    this.state = 'edit'
   };
 
-  onView = () => {
-    this.editMode = false;
+  goonEdit = () => {
+    this.state = 'edit';
   };
 
-  @computed get textareaDisplay() {
-    if (this.editMode) {
-      return 'block';
-    }
-    return 'none';
+  onView = (e) => {
+    this.state = 'browse'
+  };
+  onExit = (e) => {
+    this.state = 'browse';
+    this.content = this.originalContent;
+  };
+
+  onPreview = (e) => {
+    this.state = 'preview'
+  };
+
+  @computed get shouldUpdateHtml() {
+    return STATE2HTML[this.state]
   }
 
-  @computed get htmlDisplay() {
-    if (this.editMode) {
+  @computed get textareaDisplay() {
+    if (STATE2HTML[this.state]) {
       return 'none';
     }
     return 'block';
   }
 
-  updateContent = (file) => {
-    if (file.content && file.content.text) {
-      this.content = file.content.text;
-      this.changed = true;
+  @computed get htmlDisplay() {
+    if (STATE2HTML[this.state]) {
+      return 'block';
     }
+    return 'none';
+  }
+
+  updateContent = (e) => {
+    console.log("updateContent", e.target.value);
+    this.content = e.target.value;
+    this.changed = true;
   };
 
   @computed get submitData() {
     return JSON.stringify({content: this.content})
   }
 
-  save = (blog_id) => {
+  save = () => {
     if (!this.changed) {
       return;
     }
-    if (blog_id === "ADD") {
+    if (this.id === "ADD") {
       this.post();
       return;
     }
     this.put(JSON.stringify({
-      id: blog_id,
+      id: this.id,
       content: this.content
     }))
+  };
 
+  @computed get htmlContent() {
+    let __html = "<div></div>";
+    const content = this.content;
+    if (content) {
+      __html = marked(content);
+    }
+    return __html
   }
 }
 
@@ -95,15 +130,6 @@ class BlogListStore extends RequestStore {
       return '';
     }
     return this.ajaxStore.response.data.content;
-  }
-
-  @computed get htmlContent() {
-    let __html = "<div></div>";
-    const content = this.content;
-    if (content) {
-      __html = marked(content);
-    }
-    return __html
   }
 
   setActiveKey = (value) => {
