@@ -10,6 +10,35 @@ class ResponseStore {
 }
 
 
+class AjaxStore {
+  constructor() {
+    this.response = new ResponseStore();
+
+    this.done = this.done.bind(this);
+    this.fail = this.fail.bind(this);
+  }
+
+  @action
+  ajax(settings = {}) {
+    this.response.request = settings;
+    return $.ajax(settings).done(this.done).fail(this.fail)
+  }
+
+  @action.bound
+  done(data, textStatus, jqXHR) {
+    this.response.data = data;
+    this.response.textStatus = textStatus;
+    this.response.jqXHR = jqXHR;
+  }
+
+  @action.bound
+  fail(jqXHR, textStatus, errorThrown) {
+    this.response.jqXHR = jqXHR;
+    this.response.textStatus = textStatus;
+    this.response.errorThrown = errorThrown;
+  }
+}
+
 /**
  * 服务器交互Store. 默认一个url, 一个store
  */
@@ -96,4 +125,4 @@ class RequestStore {
 }
 
 
-export {RequestStore}
+export {RequestStore, AjaxStore}

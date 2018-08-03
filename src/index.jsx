@@ -7,8 +7,11 @@ import {Sider, SiderStore} from './base/silder.jsx';
 import {Blog} from "./blog/component.jsx";
 import Store from './store.jsx';
 
-const {Header, Footer, Content} = Layout;
+const {Content} = Layout;
 const siderStore = new SiderStore();
+
+
+
 
 
 @observer
@@ -16,7 +19,7 @@ class APP extends React.Component {
   render() {
     return (
       <Layout>
-        <Layout style={{ minHeight: '100vh' }}>
+        <Layout style={{minHeight: '100vh'}}>
           <Sider store={siderStore}/>
           <Content>
             <Blog store={Store.blogStore} listStore={Store.blogListStore}/>
