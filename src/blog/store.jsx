@@ -7,6 +7,7 @@ const _ = require('lodash');
 class BlogStore extends RequestStore {
   @observable content = '';
   @observable changed = false;
+  @observable editMode = false;
 
   constructor(url, settings = {}) {
     super(url, settings);
@@ -15,6 +16,28 @@ class BlogStore extends RequestStore {
         this.changed = false;
       }
     })
+  }
+
+  onEdit = (e) => {
+    this.editMode = true;
+  };
+
+  onView = () => {
+    this.editMode = false;
+  };
+
+  @computed get textareaDisplay() {
+    if (this.editMode) {
+      return 'block';
+    }
+    return 'none';
+  }
+
+  @computed get htmlDisplay() {
+    if (this.editMode) {
+      return 'none';
+    }
+    return 'block';
   }
 
   updateContent = (file) => {

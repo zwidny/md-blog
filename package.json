@@ -8,7 +8,7 @@
     "dev:staging": "node_modules/.bin/webpack-dev-server --config webpack/webpack.config.js",
     "dev": "node_modules/.bin/webpack-dev-server --config webpack/webpack.config.local.js"
   },
-  "author": "",
+  "author": "zwidny",
   "license": "ISC",
   "dependencies": {
     "antd": "^3.7.3",
@@ -20,8 +20,7 @@
     "mobx": "^5.0.3",
     "mobx-react": "^5.2.3",
     "react": "^16.4.1",
-    "react-dom": "^16.4.1",
-    "stackedit-js": "^1.0.5"
+    "react-dom": "^16.4.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

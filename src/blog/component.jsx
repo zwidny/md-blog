@@ -1,46 +1,31 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import {Tabs} from "antd";
-import Stackedit from "stackedit-js";
 import {mermaid} from '../utils/mermaid.jsx';
 
 const {TabPane} = Tabs;
-const stackedit = new Stackedit();
 
 
 @observer
 class Blog extends React.Component {
   constructor(props) {
     super(props);
-    const {store, listStore} = this.props;
-    stackedit.on("fileChange", store.updateContent);
-    stackedit.on("close", store.save(listStore.activekey));
+    const {listStore} = this.props;
     listStore.get();
   }
 
   selectBlog = (key) => {
     const {store, listStore} = this.props;
     if (key === 'ADD') {
-      listStore.setActiveKey("ADD");
-      stackedit.openFile({
-        name: "新建文档",
-        content: {
-          text: store.content
-        }
-      })
+      store.onEdit();
     } else {
-      listStore.setActiveKey(key)
+      listStore.setActiveKey(key);
+      store.onView();
     }
   };
 
   editBlog = (e) => {
     const {listStore} = this.props;
-    stackedit.openFile({
-      name: "修改文档",
-      content: {
-        text: listStore.content
-      }
-    })
   };
 
   /**
@@ -55,7 +40,7 @@ class Blog extends React.Component {
   }
 
   render() {
-    const {listStore} = this.props;
+    const {listStore, store} = this.props;
     return (
       <div>
         <Tabs activeKey={listStore.ActiveKey}
@@ -71,9 +56,10 @@ class Blog extends React.Component {
           ))}
         </Tabs>
         <div>
-          <textarea style={{display: 'none'}}></textarea>
-          <div><a onClick={this.editBlog}>编辑</a><a>删除</a></div>
-          <div dangerouslySetInnerHTML={{__html: listStore.htmlContent}}></div>
+          <div><a onClick={store.onEdit}>编辑</a><a>删除</a></div>
+          <textarea value={listStore.content}
+                    style={{width: "100%", height: "100vh", display: store.textareaDisplay}}></textarea>
+          <div dangerouslySetInnerHTML={{__html: listStore.htmlContent}} style={{display: store.htmlDisplay}}></div>
         </div>
       </div>
     )
