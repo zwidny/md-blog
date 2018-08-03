@@ -20,16 +20,6 @@ class BlogStore extends RequestStore {
   @observable changed = false;
   @observable state = 'browse';
 
-  constructor(url, settings = {}) {
-    super(url, settings);
-    reaction(() => this.response.jqXHR, data => {
-      if (data.status === 200) {
-        this.changed = false;
-        message.info("操作成功")
-      }
-    })
-  }
-
   onEdit = (e) => {
     this.state = 'edit'
   };
@@ -74,9 +64,11 @@ class BlogStore extends RequestStore {
     this.changed = true;
   };
 
-  @computed get submitData() {
-    return JSON.stringify({content: this.content})
-  }
+  onDelete = () => {
+    this.delete(JSON.stringify({
+      id: this.id
+    }))
+  };
 
   save = () => {
     if (!this.changed) {

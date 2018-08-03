@@ -1,6 +1,6 @@
 import React from 'react';
 import {observer} from 'mobx-react';
-import {Tabs, Button} from "antd";
+import {Tabs, Button, Popconfirm} from "antd";
 import {mermaid} from '../utils/mermaid.jsx';
 
 const {TabPane} = Tabs;
@@ -46,29 +46,38 @@ class Blog extends React.Component {
   }
 
   get renderAction() {
-    const {store, listStore} = this.props;
+    const {store} = this.props;
     // 编辑模式-> 保存， 删除， 预览
+    const _save = <Button type="primary" onClick={store.save}>保存</Button>;
+    const _delete = (
+      <Popconfirm title="你是否真的要删除这条blog？"
+                  onConfirm={()=>store.onDelete()}
+                  onCancel={()=>(console.log())}
+                  okText="是"
+                  cancelText="否">
+        <Button type="danger">删除</Button>
+      </Popconfirm>
+    );
+    const _preview = <Button onClick={store.onPreview}>预览</Button>;
+    const _exit = <Button onClick={store.onExit}>不保存退出</Button>;
+
+
     return {
       edit: (
-        <div>
-          <Button type="primary" onClick={store.save}>保存</Button>
-          <Button type="danger">删除</Button>
-          <Button onClick={store.onPreview}>预览</Button>
-          <Button onClick={store.onView}>不保存退出</Button>
-        </div>
+        <div>{_save}{_delete}{_preview}{_exit}</div>
       ),
       preview: (
         <div>
-          <Button type="primary" onClick={store.save}>保存</Button>
-          <Button type="danger">删除</Button>
+          {_save}
+          {_delete}
           <Button onClick={store.goonEdit}>继续编辑</Button>
-          <Button onClick={store.onExit}>不保存退出</Button>
+          {_exit}
         </div>
       ),
       browse: (
         <div>
           <Button type="primary" onClick={store.onEdit}>编辑</Button>
-          <Button type="danger">删除</Button>
+          {_delete}
         </div>
       )
     }[store.state];
