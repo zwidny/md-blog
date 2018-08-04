@@ -1,7 +1,6 @@
 import {RequestStore, AjaxStore} from "../common/store.jsx";
 import {observable, computed, reaction} from "mobx";
 import {marked} from "../utils/markdown.jsx";
-import {message} from 'antd';
 
 const _ = require('lodash');
 
@@ -19,6 +18,17 @@ class BlogStore extends RequestStore {
   @observable originalContent = '';
   @observable changed = false;
   @observable state = 'browse';
+
+  constructor(url, settings) {
+    super(url, settings);
+    reaction(() => this.response.jqXHR, data => {
+      if (data.status === 200) {
+        this.content = data.responseJSON.content;
+        this.originalContent = data.responseJSON.content;
+        this.id = data.responseJSON.id
+      }
+    })
+  }
 
   onEdit = (e) => {
     this.state = 'edit'

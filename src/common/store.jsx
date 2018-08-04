@@ -9,11 +9,18 @@ class ResponseStore {
   @observable errorThrown = {};
 }
 
+class StatusStore {
+  @observable status = ''
+}
 
-class AjaxStore {
+class ActionStore extends StatusStore {
+  @observable action = '';
+}
+
+class AjaxStore extends ActionStore {
   constructor() {
+    super();
     this.response = new ResponseStore();
-
     this.done = this.done.bind(this);
     this.fail = this.fail.bind(this);
   }
@@ -21,11 +28,14 @@ class AjaxStore {
   @action
   ajax(settings = {}) {
     this.response.request = settings;
+    this.action = settings.method.toUpperCase();
+    this.status = '';
     return $.ajax(settings).done(this.done).fail(this.fail)
   }
 
   @action.bound
   done(data, textStatus, jqXHR) {
+    this.status = 'done';
     this.response.data = data;
     this.response.textStatus = textStatus;
     this.response.jqXHR = jqXHR;
@@ -33,19 +43,20 @@ class AjaxStore {
 
   @action.bound
   fail(jqXHR, textStatus, errorThrown) {
+    this.status = 'fail';
     this.response.jqXHR = jqXHR;
     this.response.textStatus = textStatus;
     this.response.errorThrown = errorThrown;
   }
 }
 
+
 /**
  * 服务器交互Store. 默认一个url, 一个store
  */
-class RequestStore {
-
+class RequestStore extends AjaxStore {
   constructor(url, settings = {}) {
-
+    super();
     this.url = url;
     this.settings = settings;
     this.response = new ResponseStore();
@@ -77,22 +88,9 @@ class RequestStore {
     Object.assign(s, this.settings);
     Object.assign(s, settings);
     this.response.request = s;
-    return $.ajax(s).done(this.done).fail(this.fail)
+    return this.ajax(s)
   }
 
-  @action.bound
-  done(data, textStatus, jqXHR) {
-    this.response.data = data;
-    this.response.textStatus = textStatus;
-    this.response.jqXHR = jqXHR;
-  }
-
-  @action.bound
-  fail(jqXHR, textStatus, errorThrown) {
-    this.response.jqXHR = jqXHR;
-    this.response.textStatus = textStatus;
-    this.response.errorThrown = errorThrown;
-  }
 
   put(data, settings = {}) {
     delete settings.data;
