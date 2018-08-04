@@ -51,8 +51,8 @@ class Blog extends React.Component {
     const _save = <Button type="primary" onClick={store.save}>保存</Button>;
     const _delete = (
       <Popconfirm title="你是否真的要删除这条blog？"
-                  onConfirm={()=>store.onDelete()}
-                  onCancel={()=>(console.log())}
+                  onConfirm={() => store.onDelete()}
+                  onCancel={() => (console.log())}
                   okText="是"
                   cancelText="否">
         <Button type="danger">删除</Button>
@@ -116,6 +116,7 @@ class Blog extends React.Component {
     )
   }
 }
+
 
 export {Blog}
 
