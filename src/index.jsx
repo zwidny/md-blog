@@ -1,18 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {observer} from 'mobx-react';
-import './common/base.css'
 import {Layout} from 'antd';
 import {Sider, SiderStore} from './base/silder.jsx';
-import {Blog} from "./blog/component.jsx";
+import {BlogList} from "./blog/component.jsx";
 import Store from './store.jsx';
+import './common/base.scss';
 
 const {Content} = Layout;
 const siderStore = new SiderStore();
-
-
-
-
 
 @observer
 class APP extends React.Component {
@@ -22,10 +18,9 @@ class APP extends React.Component {
         <Layout style={{minHeight: '100vh'}}>
           <Sider store={siderStore}/>
           <Content>
-            <Blog store={Store.blogStore} listStore={Store.blogListStore}/>
+            <BlogList store={Store.blogListStore}/>
           </Content>
         </Layout>
-        {/*<Footer>Footer</Footer>*/}
       </Layout>
     )
   }

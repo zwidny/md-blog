@@ -117,6 +117,33 @@ class Blog extends React.Component {
   }
 }
 
+@observer
+class BlogList extends React.Component {
+  componentDidMount() {
+    const {store} = this.props;
+    store.get()
+  }
 
-export {Blog}
+  render() {
+    const {store} = this.props;
+    return (
+      <div>
+        {store.data.map((i, index) => (
+          <section className="hero" key={index}>
+            <div className="hero-body">
+              <div className="container">
+                <h1 className="title"><a>{i.title}</a></h1>
+                {/*<h2 className="subtitle">*/}
+                  {/*Hero subtitle*/}
+                {/*</h2>*/}
+              </div>
+            </div>
+          </section>
+        ))}
+      </div>
+    )
+  }
+}
+
+export {Blog, BlogList}
 
