@@ -7,7 +7,7 @@ import {BlogList, BlogDetail} from "./blog/component.jsx";
 import Store from './store.jsx';
 // import './common/base.scss';
 
-const {Content} = Layout;
+const {Content, Header} = Layout;
 
 class APPStore {
   @observable location = '/';
@@ -41,6 +41,7 @@ class APPStore {
   @computed get Component() {
     return this.Location2Component[this.location]
   }
+
   updateLocation = (location, kwargs) => {
     this.location = location;
     this.kwargs = kwargs;
@@ -54,6 +55,13 @@ class APP extends React.Component {
     const {_store} = this.props;
     return (
       <Layout>
+        {/*<Header style={{*/}
+          {/*position: 'fixed',*/}
+          {/*zIndex: 1,*/}
+          {/*height: "32px",*/}
+          {/*lineHeight: "32px",*/}
+          {/*width: '100%'*/}
+        {/*}}>Header</Header>*/}
         <Layout style={{minHeight: '100vh'}}>
           <Content>
             {_store.Component}

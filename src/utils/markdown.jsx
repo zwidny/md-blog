@@ -36,7 +36,6 @@ marked.setOptions({
   smartypants: true,
   tables: true,
   xhtml: false
-
 });
 
 export {marked}

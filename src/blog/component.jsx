@@ -1,121 +1,8 @@
 import React from 'react';
 import {observer, inject} from 'mobx-react';
-import {Tabs, Button, Popconfirm, Affix, Row, Col} from "antd";
+import {Button, Popconfirm, Row, Col} from "antd";
 import {mermaid} from '../utils/mermaid.jsx';
-import {withRouter} from '../utils/decorator.jsx';
 
-const {TabPane} = Tabs;
-
-@withRouter
-@observer
-class Blog extends React.Component {
-  constructor(props) {
-    super(props);
-    const {listStore} = this.props;
-    listStore.get();
-  }
-
-  selectBlog = (key) => {
-    const {store, listStore} = this.props;
-    store.id = key;
-    if (key === 'ADD') {
-      store.onEdit();
-    } else {
-      listStore.setActiveKey(key);
-      store.onView();
-    }
-  };
-
-  /**
-   * 更新后渲染mermaid
-   * @param prevProps
-   * @param prevState
-   * @param snapshot
-   */
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log("mermaid.init(undefined)");
-    const {store} = this.props;
-    if (store.shouldUpdateHtml) {
-      try {
-        mermaid.init(undefined, ".mermaid")
-
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
-
-  get renderAction() {
-    const {store} = this.props;
-    // 编辑模式-> 保存， 删除， 预览
-    const _save = <Button type="primary" onClick={store.save}>保存</Button>;
-    const _delete = (
-      <Popconfirm title="你是否真的要删除这条blog？"
-                  onConfirm={() => store.onDelete()}
-                  onCancel={() => (console.log())}
-                  okText="是"
-                  cancelText="否">
-        <Button type="danger">删除</Button>
-      </Popconfirm>
-    );
-    const _preview = <Button onClick={store.onPreview}>预览</Button>;
-    const _exit = <Button onClick={store.onExit}>不保存退出</Button>;
-
-
-    return {
-      edit: (
-        <div>{_save}{_delete}{_preview}{_exit}</div>
-      ),
-      preview: (
-        <div>
-          {_save}
-          {_delete}
-          <Button onClick={store.goonEdit}>继续编辑</Button>
-          {_exit}
-        </div>
-      ),
-      browse: (
-        <div>
-          <Button type="primary" onClick={store.onEdit}>编辑</Button>
-          {_delete}
-        </div>
-      )
-    }[store.state];
-  }
-
-  render() {
-    const {listStore, store} = this.props;
-    return (
-      <div>
-        <Tabs activeKey={listStore.ActiveKey}
-              tabPosition="right"
-              onTabClick={this.selectBlog}
-              size="small"
-              type="card"
-              tabBarStyle={{right: 0, position: 'fixed',}}
-        >
-          <TabPane tab="+" key={listStore.ADD}></TabPane>
-          {listStore.data.map(i => (<TabPane tab={i.id} key={i.id.toString()}></TabPane>))}
-        </Tabs>
-        <div>
-          {this.renderAction}
-          <textarea value={store.content}
-                    onChange={store.updateContent}
-                    style={{
-                      width: "100%",
-                      height: "100vh",
-                      backgroundColor: "#F9FAF5",
-                      color: "#2d2d1e",
-                      display: store.textareaDisplay
-                    }}>
-
-          </textarea>
-          <div dangerouslySetInnerHTML={{__html: store.htmlContent}} style={{display: store.htmlDisplay}}></div>
-        </div>
-      </div>
-    )
-  }
-}
 
 @inject('_store')
 @observer
@@ -124,7 +11,7 @@ class BlogDetail extends React.Component {
   constructor(props) {
     super(props);
     const {store, _store} = this.props;
-    store.get(_store.kwargs);
+    store.getOrCreate(_store.kwargs);
   }
 
   /**
@@ -134,9 +21,9 @@ class BlogDetail extends React.Component {
    * @param snapshot
    */
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log("mermaid.init(undefined)");
     const {store} = this.props;
     if (store.shouldUpdateHtml) {
+      console.log("shouldUpdateHtml");
       try {
         mermaid.init(undefined, ".mermaid")
       } catch (e) {
@@ -200,9 +87,11 @@ class BlogDetail extends React.Component {
     const {store} = this.props;
     return (
       <div>
-        <div>
-          {this.renderAction}
-        </div>
+        <Row type="flex" justify="end">
+          <Col>
+            {this.renderAction}
+          </Col>
+        </Row>
         <textarea value={store.content}
                   onChange={store.updateContent}
                   style={{
@@ -232,6 +121,15 @@ class BlogList extends React.Component {
     const {store, _store} = this.props;
     return (
       <div>
+        <Row type="flex" justify="end">
+          <Col>
+            <Button type="primary"
+                    onClick={() => {
+                      _store.updateLocation('/blog', {"id": "ADD"})
+                    }}
+            >新建</Button></Col>
+        </Row>
+
         {store.data.map((i, index) => (
           <section className="hero" key={index}>
             <div className="hero-body">
@@ -248,5 +146,5 @@ class BlogList extends React.Component {
   }
 }
 
-export {Blog, BlogList, BlogDetail}
+export {BlogList, BlogDetail}
 

@@ -22,7 +22,7 @@ class BlogStore extends RequestStore {
   constructor(url, settings) {
     super(url, settings);
     reaction(() => this.response.jqXHR, data => {
-      if (data.status === 200) {
+      if (data.status === 200 && this.action === 'GET') {
         this.content = data.responseJSON.content;
         this.originalContent = data.responseJSON.content;
         this.id = data.responseJSON.id
@@ -30,8 +30,23 @@ class BlogStore extends RequestStore {
     })
   }
 
+  getOrCreate(kwarg) {
+    const {id} = kwarg;
+    if (id === "ADD") {
+      return this.createNew()
+    }
+    this.get(kwarg)
+  }
+
   onEdit = (e) => {
     this.state = 'edit'
+  };
+
+  createNew = () => {
+    this.id = 'ADD';
+    this.content = '';
+    this.originalContent = '';
+    this.state = 'edit';
   };
 
   goonEdit = () => {
@@ -43,7 +58,8 @@ class BlogStore extends RequestStore {
   };
   onExit = (e) => {
     this.state = 'browse';
-    this.content = this.originalContent;
+    this.content = '';
+    this.originalContent = '';
   };
 
   onPreview = (e) => {
@@ -69,7 +85,6 @@ class BlogStore extends RequestStore {
   }
 
   updateContent = (e) => {
-    console.log("updateContent", e.target.value);
     this.content = e.target.value;
     this.changed = true;
   };
@@ -85,7 +100,9 @@ class BlogStore extends RequestStore {
       return;
     }
     if (this.id === "ADD") {
-      this.post();
+      this.post(JSON.stringify({
+        content: this.content
+      }));
       return;
     }
     this.put(JSON.stringify({
@@ -97,7 +114,7 @@ class BlogStore extends RequestStore {
   @computed get htmlContent() {
     let __html = "<div></div>";
     const content = this.content;
-    if (content) {
+    if (content && this.shouldUpdateHtml) {
       __html = marked(content);
     }
     return __html
