@@ -2,7 +2,7 @@ import React from 'react';
 import {observer, inject} from 'mobx-react';
 import {Button, Popconfirm, Row, Col} from "antd";
 import {mermaid} from '../utils/mermaid.jsx';
-
+const renderMathInElement = require('renderMathInElement');
 
 @inject('_store')
 @observer
@@ -25,7 +25,8 @@ class BlogDetail extends React.Component {
     if (store.shouldUpdateHtml) {
       console.log("shouldUpdateHtml");
       try {
-        mermaid.init(undefined, ".mermaid")
+        mermaid.init(undefined, ".mermaid");
+        renderMathInElement(document.body);
       } catch (e) {
         console.log(e);
       }

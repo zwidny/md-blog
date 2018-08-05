@@ -93,7 +93,7 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {NODE_ENV: JSON.stringify('development')},
-      'SERVICE_URL': JSON.stringify('http://192.168.200.193:8000'),
+      'SERVICE_URL': JSON.stringify('http://api.zwidny.com'),
     }),
     // new ExtractTextPlugin('common/base.css'),
     // new ExtractTextPlugin(),
