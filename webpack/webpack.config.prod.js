@@ -22,6 +22,9 @@ module.exports = {
     'moment': 'moment',
     'd3': 'd3',
     'renderMathInElement': 'renderMathInElement',
+    'mermaid': 'mermaid',
+
+
   },
   module: {
     rules: [
