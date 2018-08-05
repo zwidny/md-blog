@@ -117,3 +117,6 @@ fabric.properties
 
 /package-lock.json
 /webpack/webpack.config.local.js
+
+/build
+/stats.json

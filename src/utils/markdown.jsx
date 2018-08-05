@@ -1,8 +1,7 @@
 const marked = require('marked');
-const highlight = require('highlight.js');
-import 'highlight.js/styles/solarized-dark.css';
 
 const MERMAID = ['mermaid', 'flow', 'seq', 'gantt'];
+
 const renderer = new marked.Renderer();
 renderer._code = renderer.code;
 renderer.code = (code, language) => {
@@ -22,7 +21,7 @@ renderer.code = (code, language) => {
 };
 
 const _highlight = (code) => {
-  return highlight.highlightAuto(code).value;
+  return require('highlight.js').highlightAuto(code).value;
 };
 
 marked.setOptions({
