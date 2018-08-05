@@ -14,7 +14,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__repo, "build"),
-    filename: `bundle.js`,
+    filename: `[name].js`,
   },
   externals: {
     'highlight.js': 'hljs',
