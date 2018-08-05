@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {observer, Provider, inject} from 'mobx-react';
 import {computed, observable, reaction} from 'mobx';
-import {Layout} from 'antd';
+import {Layout, Card} from 'antd';
 import {BlogList, BlogDetail} from "./blog/component.jsx";
 import Store from './store.jsx';
 // import './common/base.scss';
 
-const {Content, Header} = Layout;
+const {Sider, Content} = Layout;
 
 class APPStore {
   @observable location = '/';
@@ -55,16 +55,12 @@ class APP extends React.Component {
     const {_store} = this.props;
     return (
       <Layout>
-        {/*<Header style={{*/}
-          {/*position: 'fixed',*/}
-          {/*zIndex: 1,*/}
-          {/*height: "32px",*/}
-          {/*lineHeight: "32px",*/}
-          {/*width: '100%'*/}
-        {/*}}>Header</Header>*/}
+        <Sider>Sider</Sider>
         <Layout style={{minHeight: '100vh'}}>
           <Content>
-            {_store.Component}
+            <Card>
+              {_store.Component}
+            </Card>
           </Content>
         </Layout>
       </Layout>
