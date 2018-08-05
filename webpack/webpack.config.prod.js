@@ -21,6 +21,7 @@ module.exports = {
     'lodash': '_',
     'moment': 'moment',
     'd3': 'd3',
+    'renderMathInElement': 'renderMathInElement',
   },
   module: {
     rules: [
