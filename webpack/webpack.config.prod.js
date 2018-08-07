@@ -2,8 +2,8 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const MinifyPlugin = require("babel-minify-webpack-plugin");
 const theme = require('../src/theme');
+const CompressionPlugin = require("compression-webpack-plugin");
 
 
 const __repo = path.dirname(__dirname);
@@ -14,7 +14,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__repo, "build"),
-    filename: `bundle.js`,
+    filename: `[name].[hash].js`,
   },
   externals: {
     'highlight.js': 'hljs',
@@ -87,9 +87,8 @@ module.exports = {
       'process.env': {NODE_ENV: JSON.stringify('production')},
       'SERVICE_URL': JSON.stringify('http://api.zwidny.com')
     }),
-    new MinifyPlugin(),
     new HtmlWebpackPlugin({
-      inject: false,
+      inject: true,
       template: __repo + "/public/index.html",
       minify: {
         removeComments: true,
@@ -114,5 +113,12 @@ module.exports = {
         warnings: false,
       }
     }),
+    new CompressionPlugin({
+      asset: "[path].gz[query]",
+      algorithm: "gzip",
+      test: /\.js$|\.css$|\.html$/,
+      threshold: 10240,
+      minRatio: 0.8
+    })
   ]
 };
